@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,12 +14,10 @@ namespace TbaApiClient
     {
         private string BaseURL = "http://www.thebluealliance.com/api/v2/team/";
         private string AppID = "team2147/gary-major:TheBlueAlliance v2 API Client:1.0.0.0";
-        Exception WebError;
+        public Exception CurrentWebError;
 
         public async Task<TeamInformation> GetTeamInfo(string teamNumber)
         {
-            string responseData = "";
-
             try
             {
                 using (var httpClient = new HttpClient())
@@ -30,12 +27,12 @@ namespace TbaApiClient
 
                     using (var response = await httpClient.GetAsync(new Uri(BaseURL + "frc" + teamNumber)))
                     {
-                        responseData = await response.Content.ReadAsStringAsync();
+                        string responseData = await response.Content.ReadAsStringAsync();
                         DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(TeamInformation));
                         using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
                         {
                             TeamInformation teaminfo = (TeamInformation)serializer.ReadObject(ms); // serialize the data into TeamData
-                            this.WebError = null;
+                            CurrentWebError = null;
                             return teaminfo;
                         }
                     }
@@ -43,7 +40,7 @@ namespace TbaApiClient
             }
             catch (Exception webError)
             {
-                this.WebError = webError;
+                CurrentWebError = webError;
                 return new TeamInformation();
             }
         }
