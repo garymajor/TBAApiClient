@@ -12,20 +12,57 @@ namespace TbaApiClient
 {
     public class Team
     {
-        private string BaseURL = "http://www.thebluealliance.com/api/v2/team/";
-        private string AppID = "team2147/gary-major:TheBlueAlliance v2 API Client:1.0.0.0";
         public Exception CurrentWebError;
 
-        public async Task<TeamInformation> GetTeamInfo(string teamNumber)
+        /// <summary>
+        /// Gets the team event information for the given teamnumber.
+        /// </summary>
+        /// <param name="teamnumber">The team number (e.g., 2147)</param>
+        /// <returns>Task of type TeamEventInformation</returns>
+        public async Task<List<TeamEventInformation>> GetTeamEventInfoList(string teamnumber)
         {
             try
             {
                 using (var httpClient = new HttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", AppID);
+                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
 
-                    using (var response = await httpClient.GetAsync(new Uri(BaseURL + "frc" + teamNumber)))
+                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseURL + Hardcodes.TeamPrefix + teamnumber + "/" + Hardcodes.YearString + "/events")))
+                    {
+                        string responseData = await response.Content.ReadAsStringAsync();
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<TeamEventInformation>));
+                        using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
+                        {
+                            List<TeamEventInformation> teamEventInfo = (List<TeamEventInformation>)serializer.ReadObject(ms); // serialize the data into TeamData
+                            CurrentWebError = null;
+                            return teamEventInfo;
+                        }
+                    }
+                }
+            }
+            catch (Exception webError)
+            {
+                CurrentWebError = webError;
+                return new List<TeamEventInformation>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the team information for the given teamnumber.
+        /// </summary>
+        /// <param name="teamnumber">The team number (e.g., 2147)</param>
+        /// <returns>Task of type TeamInformation</returns>
+        public async Task<TeamInformation> GetTeamInfo(string teamnumber)
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
+                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
+
+                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseURL + Hardcodes.TeamPrefix + teamnumber)))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
                         DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(TeamInformation));

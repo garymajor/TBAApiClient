@@ -107,6 +107,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModel\TeamEventInformation.cs" />
+    <Compile Include="Hardcodes.cs" />
     <Compile Include="Team.cs" />
     <Compile Include="DataModel\TeamInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
