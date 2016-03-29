@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -18,8 +19,8 @@ namespace TbaApiClient
         /// Gets the team event information for the given teamnumber.
         /// </summary>
         /// <param name="teamnumber">The team number (e.g., 2147)</param>
-        /// <returns>Task of type TeamEventInformation</returns>
-        public async Task<List<TeamEventInformation>> GetTeamEventInfoList(string teamnumber)
+        /// <returns>Task of type ObservableCollection of TeamEventInformation</returns>
+        public async Task<ObservableCollection<TeamEventInformation>> GetTeamEventInfoList(string teamnumber)
         {
             try
             {
@@ -31,10 +32,10 @@ namespace TbaApiClient
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseURL + Hardcodes.TeamPrefix + teamnumber + "/" + Hardcodes.YearString + "/events")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<TeamEventInformation>));
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ObservableCollection<TeamEventInformation>));
                         using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
                         {
-                            List<TeamEventInformation> teamEventInfo = (List<TeamEventInformation>)serializer.ReadObject(ms); // serialize the data into TeamData
+                            ObservableCollection<TeamEventInformation> teamEventInfo = (ObservableCollection<TeamEventInformation>)serializer.ReadObject(ms); // serialize the data into TeamData
                             CurrentWebError = null;
                             return teamEventInfo;
                         }
@@ -44,7 +45,7 @@ namespace TbaApiClient
             catch (Exception webError)
             {
                 CurrentWebError = webError;
-                return new List<TeamEventInformation>();
+                return new ObservableCollection<TeamEventInformation>();
             }
         }
 
