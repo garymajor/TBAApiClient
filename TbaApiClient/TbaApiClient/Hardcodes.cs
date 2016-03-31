@@ -16,7 +16,17 @@ namespace TbaApiClient
         /// <summary>
         /// The base URL that is used to make calls to TheBlueAlliance API.
         /// </summary>
-        public const string BaseURL = "http://www.thebluealliance.com/api/v2/team/";
+        public const string BaseURL = "http://www.thebluealliance.com/api/v2/";
+
+        /// <summary>
+        /// The  URL that is used to make calls to TheBlueAlliance Team API.
+        /// </summary>
+        public const string BaseTeamURL = BaseURL + "team/";
+
+        /// <summary>
+        /// The  URL that is used to make calls to TheBlueAlliance Team API.
+        /// </summary>
+        public const string BaseEventURL = BaseURL + "event/";
 
         /// <summary>
         /// Prefix to put in front of team in The Blue Alliance API calls.

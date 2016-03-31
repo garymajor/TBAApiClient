@@ -20,7 +20,7 @@ namespace TbaApiClient
         /// </summary>
         /// <param name="teamnumber">The team number (e.g., 2147)</param>
         /// <returns>Task of type ObservableCollection of TeamEventInformation</returns>
-        public async Task<ObservableCollection<TeamEventInformation>> GetTeamEventInfoList(string teamnumber)
+        public async Task<ObservableCollection<EventInformation>> GetTeamEventInfoList(string teamnumber)
         {
             try
             {
@@ -29,13 +29,13 @@ namespace TbaApiClient
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
 
-                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseURL + Hardcodes.TeamPrefix + teamnumber + "/" + Hardcodes.YearString + "/events")))
+                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber + "/" + Hardcodes.YearString + "/events")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ObservableCollection<TeamEventInformation>));
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ObservableCollection<EventInformation>));
                         using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
                         {
-                            ObservableCollection<TeamEventInformation> teamEventInfo = (ObservableCollection<TeamEventInformation>)serializer.ReadObject(ms); // serialize the data into TeamData
+                            ObservableCollection<EventInformation> teamEventInfo = (ObservableCollection<EventInformation>)serializer.ReadObject(ms); // serialize the data into TeamData
                             CurrentWebError = null;
                             return teamEventInfo;
                         }
@@ -45,7 +45,7 @@ namespace TbaApiClient
             catch (Exception webError)
             {
                 CurrentWebError = webError;
-                return new ObservableCollection<TeamEventInformation>();
+                return new ObservableCollection<EventInformation>();
             }
         }
 
@@ -63,7 +63,7 @@ namespace TbaApiClient
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
 
-                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseURL + Hardcodes.TeamPrefix + teamnumber)))
+                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber)))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
                         DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(TeamInformation));

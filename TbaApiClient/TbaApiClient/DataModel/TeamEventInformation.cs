@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TbaApiClient.DataModel
 {
-    public class TeamEventInformation
+    public class EventInformation
     {
         public class Webcast
         {
