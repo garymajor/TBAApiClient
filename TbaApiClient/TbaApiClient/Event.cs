@@ -122,7 +122,7 @@ namespace TbaApiClient
         /// </summary>
         /// <param name="eventkey">The event key (e.g., 2017waspo)</param>
         /// <returns>Task of type EventInformation</returns>
-        public async Task<EventInformation> GetEventnfo(string eventkey)
+        public async Task<EventInformation> GetEventInfo(string eventkey)
         {
             try
             {

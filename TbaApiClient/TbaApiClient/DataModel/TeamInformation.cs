@@ -8,6 +8,19 @@ namespace TbaApiClient.DataModel
 {
     public class TeamInformation
     {
+        /// <summary>
+        /// Returns the team number as a number instead of a string (e.g., for sorting)
+        /// </summary>
+        public int teamnum
+        {
+            get
+            {
+                int i;
+                int.TryParse(this.team_number, out i);
+                return i;
+            }
+        }
+
         public string website { get; set; }
         public string name { get; set; }
         public string locality { get; set; }
