@@ -116,5 +116,39 @@ namespace TbaApiClient
                 return new ObservableCollection<TeamInformation>();
             }
         }
+
+        /// <summary>
+        /// Gets the event information for the given eventkey.
+        /// </summary>
+        /// <param name="eventkey">The event key (e.g., 2017waspo)</param>
+        /// <returns>Task of type EventInformation</returns>
+        public async Task<EventInformation> GetEventnfo(string eventkey)
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
+                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
+
+                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey)))
+                    {
+                        string responseData = await response.Content.ReadAsStringAsync();
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(EventInformation));
+                        using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
+                        {
+                            EventInformation eventinfo = (EventInformation)serializer.ReadObject(ms); // serialize the data into TeamData
+                            CurrentWebError = null;
+                            return eventinfo;
+                        }
+                    }
+                }
+            }
+            catch (Exception webError)
+            {
+                CurrentWebError = webError;
+                return new EventInformation();
+            }
+        }
     }
 }
