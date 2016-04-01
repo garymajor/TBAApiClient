@@ -14,6 +14,14 @@ namespace TbaApiClient.DataModel
             public object awardee { get; set; }
         }
 
+        public string awardees
+        {
+            get
+            {
+                return string.Join(", ", recipient_list.Select(award => award.team_number));
+            }
+        }
+
         public string event_key { get; set; }
         public int award_type { get; set; }
         public string name { get; set; }
