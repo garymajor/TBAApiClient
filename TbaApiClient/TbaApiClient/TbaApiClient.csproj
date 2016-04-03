@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="DataModel\EventAwardInformation.cs" />
     <Compile Include="DataModel\EventInformation.cs" />
+    <Compile Include="DataModel\MatchInformation.cs" />
     <Compile Include="Hardcodes.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Team.cs" />
