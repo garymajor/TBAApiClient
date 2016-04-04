@@ -162,23 +162,6 @@ namespace TbaApiClient
         }
 
         /// <summary>
-        /// Gets the match list for a given team at an event.
-        /// </summary>
-        /// <param name="team">The team to get matches for (e.g., "2147")</param>
-        /// <param name="eventkey">The event key (e.g., "2016waspo")</param>
-        /// <returns>Task of type ObservableCollection of MatchInformation</returns>
-        public async Task<List<MatchInformation>> GetEventTeamMatchList(string team, string eventkey)
-        {
-            List<MatchInformation> matchInfo = await GetEventMatchList(eventkey);
-
-            List<MatchInformation> teamMatchInfo = (List<MatchInformation>)matchInfo
-                .Where(match => match.BlueAllianceTeams.Contains(team) || match.RedAllianceTeams.Contains(team))
-                .Select(match => match);
-
-            return teamMatchInfo;
-        }
-
-        /// <summary>
         /// Gets the event information for the given eventkey.
         /// </summary>
         /// <param name="eventkey">The event key (e.g., 2017waspo)</param>
