@@ -1,4 +1,7 @@
-﻿using TbaApiClient.DataModel;
+﻿using Newtonsoft;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using TbaApiClient.DataModel;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -67,21 +70,34 @@ namespace TbaApiClient
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
 
-                        // Fix up the output to match the DataModel names
-                        //responseData = responseData.Replace("Ranking Score", "Ranking_Score");
-                        //responseData = responseData.Replace("Scale/Challenge", "Scale_Challenge");
-                        //responseData = responseData.Replace("Record (W-L-T)", "Record_W_L_T");
+                        // Fix up the output to shorten the names (can use as headers)
+                        responseData = responseData.Replace("Ranking Score", "Score");
+                        responseData = responseData.Replace("Rank", "");
+                        responseData = responseData.Replace("Scale/Challenge", "Scl/Ch");
+                        responseData = responseData.Replace("Record (W-L-T)", "Record");
+                        responseData = responseData.Replace("Defense", "Def");
+                        responseData = responseData.Replace("Played", "Pl");
 
-                        var serializerSettings = new DataContractJsonSerializerSettings();
-                        serializerSettings.UseSimpleDictionaryFormat = true;
+                        // This API returns a JSonArray instead of JSonObjects -- so we have to deal with it differently than the other APIs.
+                        JArray j = (JArray)JsonConvert.DeserializeObject(responseData);
 
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ObservableCollection<EventRankingInformation>), serializerSettings);
-                        using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
+                        List<EventRankingInformation> eventRankingInfo = new List<EventRankingInformation>();
+                        foreach (var item in j)
                         {
-                            ObservableCollection<EventRankingInformation> eventRankingInfo = (ObservableCollection<EventRankingInformation>)serializer.ReadObject(ms); // serialize the data into TeamData
-                            CurrentWebError = null;
-                            return eventRankingInfo;
+                            EventRankingInformation e = new EventRankingInformation();
+                            e.Rank = item[0].ToString();
+                            e.Team = item[1].ToString();
+                            e.Ranking_Score = item[2].ToString();
+                            e.Auto = item[3].ToString();
+                            e.Scale_Challenge = item[4].ToString();
+                            e.Goals = item[5].ToString();
+                            e.Defense = item[6].ToString();
+                            e.Record_W_L_T = item[7].ToString();
+                            e.Played = item[8].ToString();
+                            eventRankingInfo.Add(e);
                         }
+
+                        return new ObservableCollection<EventRankingInformation>(eventRankingInfo);
                     }
                 }
             }
