@@ -1,14 +1,9 @@
-﻿using Newtonsoft;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TbaApiClient.DataModel;
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Web.Http;
 
@@ -35,13 +30,8 @@ namespace TbaApiClient
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/awards")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ObservableCollection<EventAwardInformation>));
-                        using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
-                        {
-                            ObservableCollection<EventAwardInformation> eventAwardInfo = (ObservableCollection<EventAwardInformation>)serializer.ReadObject(ms); // serialize the data into TeamData
-                            CurrentWebError = null;
-                            return eventAwardInfo;
-                        }
+                        ObservableCollection<EventAwardInformation> eventAwardInfo = JsonConvert.DeserializeObject<ObservableCollection<EventAwardInformation>>(responseData);
+                        return eventAwardInfo;
                     }
                 }
             }
@@ -125,13 +115,8 @@ namespace TbaApiClient
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/teams")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ObservableCollection<TeamInformation>));
-                        using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
-                        {
-                            ObservableCollection<TeamInformation> eventTeamInfo = (ObservableCollection<TeamInformation>)serializer.ReadObject(ms); // serialize the data into TeamData
-                            CurrentWebError = null;
-                            return eventTeamInfo;
-                        }
+                        ObservableCollection<TeamInformation> eventTeamInfo = JsonConvert.DeserializeObject<ObservableCollection<TeamInformation>>(responseData);
+                        return eventTeamInfo;
                     }
                 }
             }
@@ -159,13 +144,8 @@ namespace TbaApiClient
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey)))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(EventInformation));
-                        using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
-                        {
-                            EventInformation eventinfo = (EventInformation)serializer.ReadObject(ms); // serialize the data into TeamData
-                            CurrentWebError = null;
-                            return eventinfo;
-                        }
+                        EventInformation eventInfo = JsonConvert.DeserializeObject<EventInformation>(responseData);
+                        return eventInfo;
                     }
                 }
             }
