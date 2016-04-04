@@ -21,7 +21,7 @@ namespace TbaApiClient
         /// </summary>
         /// <param name="teamnumber">The team number (e.g., 2147)</param>
         /// <returns>Task of type ObservableCollection of TeamEventInformation</returns>
-        public async Task<ObservableCollection<EventInformation>> GetTeamEventInfoList(string teamnumber)
+        public async Task<List<EventInformation>> GetTeamEventInfoList(string teamnumber)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace TbaApiClient
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber + "/" + Hardcodes.YearString + "/events")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
-                        ObservableCollection<EventInformation> teamEventInfo = JsonConvert.DeserializeObject<ObservableCollection<EventInformation>>(responseData);
+                        List<EventInformation> teamEventInfo = JsonConvert.DeserializeObject<List<EventInformation>>(responseData);
                         return teamEventInfo;
                     }
                 }
@@ -42,7 +42,7 @@ namespace TbaApiClient
             catch (Exception webError)
             {
                 CurrentWebError = webError;
-                return new ObservableCollection<EventInformation>();
+                return new List<EventInformation>();
             }
         }
 

@@ -19,7 +19,7 @@ namespace TbaApiClient
         /// </summary>
         /// <param name="eventkey">The event key (e.g., "2016waspo")</param>
         /// <returns>Task of type ObservableCollection of EventAwardInformation</returns>
-        public async Task<ObservableCollection<EventAwardInformation>> GetEventAwardList(string eventkey)
+        public async Task<List<EventAwardInformation>> GetEventAwardList(string eventkey)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace TbaApiClient
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/awards")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
-                        ObservableCollection<EventAwardInformation> eventAwardInfo = JsonConvert.DeserializeObject<ObservableCollection<EventAwardInformation>>(responseData);
+                        List<EventAwardInformation> eventAwardInfo = JsonConvert.DeserializeObject<List<EventAwardInformation>>(responseData);
                         return eventAwardInfo;
                     }
                 }
@@ -40,7 +40,7 @@ namespace TbaApiClient
             catch (Exception webError)
             {
                 CurrentWebError = webError;
-                return new ObservableCollection<EventAwardInformation>();
+                return new List<EventAwardInformation>();
             }
         }
 
@@ -79,7 +79,7 @@ namespace TbaApiClient
         /// </summary>
         /// <param name="eventkey">The event key (e.g., "2016waspo")</param>
         /// <returns>Task of type ObservableCollection of EventRankingInformation</returns>
-        public async Task<ObservableCollection<EventRankingInformation>> GetEventRankingList(string eventkey)
+        public async Task<List<EventRankingInformation>> GetEventRankingList(string eventkey)
         {
             try
             {
@@ -120,14 +120,14 @@ namespace TbaApiClient
                             eventRankingInfo.Add(e);
                         }
 
-                        return new ObservableCollection<EventRankingInformation>(eventRankingInfo);
+                        return new List<EventRankingInformation>(eventRankingInfo);
                     }
                 }
             }
             catch (Exception webError)
             {
                 CurrentWebError = webError;
-                return new ObservableCollection<EventRankingInformation>();
+                return new List<EventRankingInformation>();
             }
         }
 
@@ -136,7 +136,7 @@ namespace TbaApiClient
         /// </summary>
         /// <param name="eventkey">The event key (e.g., "2016waspo")</param>
         /// <returns>Task of type ObservableCollection of TeamInformation</returns>
-        public async Task<ObservableCollection<TeamInformation>> GetEventTeamList(string eventkey)
+        public async Task<List<TeamInformation>> GetEventTeamList(string eventkey)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace TbaApiClient
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/teams")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
-                        ObservableCollection<TeamInformation> eventTeamInfo = JsonConvert.DeserializeObject<ObservableCollection<TeamInformation>>(responseData);
+                        List<TeamInformation> eventTeamInfo = JsonConvert.DeserializeObject<List<TeamInformation>>(responseData);
                         return eventTeamInfo;
                     }
                 }
@@ -157,7 +157,7 @@ namespace TbaApiClient
             catch (Exception webError)
             {
                 CurrentWebError = webError;
-                return new ObservableCollection<TeamInformation>();
+                return new List<TeamInformation>();
             }
         }
 
