@@ -1,4 +1,5 @@
-﻿using TbaApiClient.DataModel;
+﻿using Newtonsoft.Json;
+using TbaApiClient.DataModel;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -32,13 +33,9 @@ namespace TbaApiClient
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber + "/" + Hardcodes.YearString + "/events")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ObservableCollection<EventInformation>));
-                        using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
-                        {
-                            ObservableCollection<EventInformation> teamEventInfo = (ObservableCollection<EventInformation>)serializer.ReadObject(ms); // serialize the data into TeamData
-                            CurrentWebError = null;
-                            return teamEventInfo;
-                        }
+                        ObservableCollection<EventInformation> teamEventInfo = JsonConvert.DeserializeObject<ObservableCollection<EventInformation>>(responseData);
+                        CurrentWebError = null;
+                        return teamEventInfo;
                     }
                 }
             }
@@ -66,13 +63,9 @@ namespace TbaApiClient
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber)))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(TeamInformation));
-                        using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
-                        {
-                            TeamInformation teaminfo = (TeamInformation)serializer.ReadObject(ms); // serialize the data into TeamData
-                            CurrentWebError = null;
-                            return teaminfo;
-                        }
+                        TeamInformation teamInfo = JsonConvert.DeserializeObject<TeamInformation>(responseData);
+                        CurrentWebError = null;
+                        return teamInfo;
                     }
                 }
             }
