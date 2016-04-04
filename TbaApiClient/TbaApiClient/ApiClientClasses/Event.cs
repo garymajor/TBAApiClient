@@ -4,6 +4,7 @@ using TbaApiClient.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Web.Http;
 
@@ -40,6 +41,36 @@ namespace TbaApiClient
             {
                 CurrentWebError = webError;
                 return new ObservableCollection<EventAwardInformation>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the match list for a given event.
+        /// </summary>
+        /// <param name="eventkey">The event key (e.g., "2016waspo")</param>
+        /// <returns>Task of type ObservableCollection of MatchInformation</returns>
+        public async Task<List<MatchInformation>> GetEventMatchList(string eventkey)
+        {
+            try
+            {
+                CurrentWebError = null;
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
+                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
+
+                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/matches")))
+                    {
+                        string responseData = await response.Content.ReadAsStringAsync();
+                        List<MatchInformation> eventMatchInfo = JsonConvert.DeserializeObject<List<MatchInformation>>(responseData);
+                        return eventMatchInfo;
+                    }
+                }
+            }
+            catch (Exception webError)
+            {
+                CurrentWebError = webError;
+                return new List<MatchInformation>();
             }
         }
 
@@ -128,6 +159,23 @@ namespace TbaApiClient
                 CurrentWebError = webError;
                 return new ObservableCollection<TeamInformation>();
             }
+        }
+
+        /// <summary>
+        /// Gets the match list for a given team at an event.
+        /// </summary>
+        /// <param name="team">The team to get matches for (e.g., "2147")</param>
+        /// <param name="eventkey">The event key (e.g., "2016waspo")</param>
+        /// <returns>Task of type ObservableCollection of MatchInformation</returns>
+        public async Task<List<MatchInformation>> GetEventTeamMatchList(string team, string eventkey)
+        {
+            List<MatchInformation> matchInfo = await GetEventMatchList(eventkey);
+
+            List<MatchInformation> teamMatchInfo = (List<MatchInformation>)matchInfo
+                .Where(match => match.BlueAllianceTeams.Contains(team) || match.RedAllianceTeams.Contains(team))
+                .Select(match => match);
+
+            return teamMatchInfo;
         }
 
         /// <summary>

@@ -9,6 +9,38 @@ namespace TbaApiClient.DataModel
     public class MatchInformation
     {
         /// <summary>
+        /// public member to be able to sort on the competition level (qual match=1, semi-finals=2, quarter-finals=3, finals=4, anything else=5
+        /// </summary>
+        public int CompetitionLevelSortOrder
+        {
+            get
+            {
+                switch (comp_level)
+                {
+                    case "qm": return 1;
+                    case "sf": return 2;
+                    case "qf": return 3;
+                    case "f": return 4;
+                }
+                return 5;
+            }
+        }
+
+        /// <summary>
+        /// public member to get formatted competition level + match number (e.g., qm50)
+        /// </summary>
+        public string MatchNumber
+        {
+            get
+            {
+                StringBuilder s = new StringBuilder();
+                s.Append(comp_level);
+                s.Append(match_number);
+                return s.ToString();
+            }
+        }
+
+        /// <summary>
         /// public member to easily get the blue alliance teams for the match.
         /// </summary>
         public string BlueAllianceTeams
