@@ -85,15 +85,15 @@ namespace TbaApiClient
                         foreach (var item in j)
                         {
                             EventRankingInformation e = new EventRankingInformation();
-                            e.Rank = item[0].ToString();
-                            e.Team = item[1].ToString();
-                            e.Ranking_Score = item[2].ToString();
-                            e.Auto = item[3].ToString();
-                            e.Scale_Challenge = item[4].ToString();
-                            e.Goals = item[5].ToString();
-                            e.Defense = item[6].ToString();
-                            e.Record_W_L_T = item[7].ToString();
-                            e.Played = item[8].ToString();
+                            e.rank = item[0].ToString();
+                            e.team = item[1].ToString();
+                            e.ranking_score = item[2].ToString();
+                            e.auto = item[3].ToString();
+                            e.scale_challenge = item[4].ToString();
+                            e.goals = item[5].ToString();
+                            e.defense = item[6].ToString();
+                            e.record_w_l_t = item[7].ToString();
+                            e.played = item[8].ToString();
                             eventRankingInfo.Add(e);
                         }
 

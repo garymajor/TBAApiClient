@@ -9,14 +9,14 @@ namespace TbaApiClient.DataModel
 {
     public class EventRankingInformation
     {
-        public string Rank { get; set; }
-        public string Team { get; set; }
-        public string Ranking_Score { get; set; }
-        public string Auto { get; set; }
-        public string Scale_Challenge { get; set; }
-        public string Goals { get; set; }
-        public string Defense { get; set; }
-        public string Record_W_L_T { get; set; }
-        public string Played { get; set; }
+        public string rank { get; set; }
+        public string team { get; set; }
+        public string ranking_score { get; set; }
+        public string auto { get; set; }
+        public string scale_challenge { get; set; }
+        public string goals { get; set; }
+        public string defense { get; set; }
+        public string record_w_l_t { get; set; }
+        public string played { get; set; }
     }
 }
