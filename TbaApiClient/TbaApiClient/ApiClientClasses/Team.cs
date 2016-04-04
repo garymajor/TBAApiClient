@@ -25,6 +25,7 @@ namespace TbaApiClient
         {
             try
             {
+                CurrentWebError = null;
                 using (var httpClient = new HttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
@@ -34,7 +35,6 @@ namespace TbaApiClient
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
                         ObservableCollection<EventInformation> teamEventInfo = JsonConvert.DeserializeObject<ObservableCollection<EventInformation>>(responseData);
-                        CurrentWebError = null;
                         return teamEventInfo;
                     }
                 }
@@ -55,6 +55,7 @@ namespace TbaApiClient
         {
             try
             {
+                CurrentWebError = null;
                 using (var httpClient = new HttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
@@ -64,7 +65,6 @@ namespace TbaApiClient
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
                         TeamInformation teamInfo = JsonConvert.DeserializeObject<TeamInformation>(responseData);
-                        CurrentWebError = null;
                         return teamInfo;
                     }
                 }

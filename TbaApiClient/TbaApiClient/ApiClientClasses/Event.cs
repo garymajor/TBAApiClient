@@ -22,6 +22,7 @@ namespace TbaApiClient
         {
             try
             {
+                CurrentWebError = null;
                 using (var httpClient = new HttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
@@ -51,6 +52,7 @@ namespace TbaApiClient
         {
             try
             {
+                CurrentWebError = null;
                 using (var httpClient = new HttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
@@ -107,6 +109,7 @@ namespace TbaApiClient
         {
             try
             {
+                CurrentWebError = null;
                 using (var httpClient = new HttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
@@ -136,6 +139,7 @@ namespace TbaApiClient
         {
             try
             {
+                CurrentWebError = null;
                 using (var httpClient = new HttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
