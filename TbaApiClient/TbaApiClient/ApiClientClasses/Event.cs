@@ -49,39 +49,48 @@ namespace TbaApiClient
             }
         }
 
-        ///// <summary>
-        ///// Gets the ranking list for a given event.
-        ///// </summary>
-        ///// <param name="eventkey">The event key (e.g., "2016waspo")</param>
-        ///// <returns>Task of type ObservableCollection of EventRankingInformation</returns>
-        //public async Task<ObservableCollection<EventRankingInformation>> GetEventRankingList(string eventkey)
-        //{
-        //    try
-        //    {
-        //        using (var httpClient = new HttpClient())
-        //        {
-        //            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
-        //            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
+        /// <summary>
+        /// Gets the ranking list for a given event.
+        /// </summary>
+        /// <param name="eventkey">The event key (e.g., "2016waspo")</param>
+        /// <returns>Task of type ObservableCollection of EventRankingInformation</returns>
+        public async Task<ObservableCollection<EventRankingInformation>> GetEventRankingList(string eventkey)
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
+                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
 
-        //            using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/rankings")))
-        //            {
-        //                string responseData = await response.Content.ReadAsStringAsync();
-        //                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ObservableCollection<EventRankingInformation>));
-        //                using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
-        //                {
-        //                    ObservableCollection<EventRankingInformation> eventRankingInfo = (ObservableCollection<EventRankingInformation>)serializer.ReadObject(ms); // serialize the data into TeamData
-        //                    CurrentWebError = null;
-        //                    return eventRankingInfo;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception webError)
-        //    {
-        //        CurrentWebError = webError;
-        //        return new ObservableCollection<EventRankingInformation>();
-        //    }
-        //}
+                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/rankings")))
+                    {
+                        string responseData = await response.Content.ReadAsStringAsync();
+
+                        // Fix up the output to match the DataModel names
+                        //responseData = responseData.Replace("Ranking Score", "Ranking_Score");
+                        //responseData = responseData.Replace("Scale/Challenge", "Scale_Challenge");
+                        //responseData = responseData.Replace("Record (W-L-T)", "Record_W_L_T");
+
+                        var serializerSettings = new DataContractJsonSerializerSettings();
+                        serializerSettings.UseSimpleDictionaryFormat = true;
+
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ObservableCollection<EventRankingInformation>), serializerSettings);
+                        using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(responseData)))
+                        {
+                            ObservableCollection<EventRankingInformation> eventRankingInfo = (ObservableCollection<EventRankingInformation>)serializer.ReadObject(ms); // serialize the data into TeamData
+                            CurrentWebError = null;
+                            return eventRankingInfo;
+                        }
+                    }
+                }
+            }
+            catch (Exception webError)
+            {
+                CurrentWebError = webError;
+                return new ObservableCollection<EventRankingInformation>();
+            }
+        }
 
         /// <summary>
         /// Gets the team list for a given event.

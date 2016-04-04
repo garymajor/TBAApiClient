@@ -110,9 +110,10 @@
     <Compile Include="DataModel\EventAwardInformation.cs" />
     <Compile Include="DataModel\EventInformation.cs" />
     <Compile Include="DataModel\MatchInformation.cs" />
+    <Compile Include="DataModel\EventRankingInformation.cs" />
     <Compile Include="Hardcodes.cs" />
-    <Compile Include="Event.cs" />
-    <Compile Include="Team.cs" />
+    <Compile Include="ApiClientClasses\Event.cs" />
+    <Compile Include="ApiClientClasses\Team.cs" />
     <Compile Include="DataModel\TeamInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\TbaApiClient.rd.xml" />
