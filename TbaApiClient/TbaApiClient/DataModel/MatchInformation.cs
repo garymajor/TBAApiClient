@@ -191,6 +191,30 @@ namespace TbaApiClient.DataModel
 
         public class Alliances
         {
+            public List<string> BlueTeamNumberList
+            {
+                get
+                {
+                    var teams = blue.teams;
+                    for (int i=0; i < teams.Count; i++)
+                    {
+                        teams[i] = teams[i].Replace("frc", string.Empty);
+                    }
+                    return teams;
+                }
+            }
+            public List<string> RedTeamNumberList
+            {
+                get
+                {
+                    var teams = red.teams;
+                    for (int i = 0; i < teams.Count; i++)
+                    {
+                        teams[i] = teams[i].Replace("frc", string.Empty);
+                    }
+                    return teams;
+                }
+            }
             public Blue2 blue { get; set; }
             public Red2 red { get; set; }
         }
