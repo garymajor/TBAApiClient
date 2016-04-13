@@ -81,6 +81,20 @@ namespace TbaApiClient.DataModel
             }
         }
 
+        /// <summary>
+        /// public member to return the date/time of the match
+        /// </summary>
+        public System.DateTime MatchDateTime
+        {
+            get
+            {
+                // The time we get from TBA is a Unix time string, so we need to convert from Utc.
+                System.DateTime dt = new System.DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                dt = dt.AddSeconds(time);
+                return dt.ToLocalTime();
+            }
+        }
+        
         public class Video
         {
             public string type { get; set; }
