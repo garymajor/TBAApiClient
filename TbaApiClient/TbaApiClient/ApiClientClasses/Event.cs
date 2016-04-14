@@ -93,31 +93,27 @@ namespace TbaApiClient
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
 
-                        // Fix up the output to shorten the names (can use as headers)
-                        responseData = responseData.Replace("Ranking Score", "Score");
-                        responseData = responseData.Replace("Rank", "");
-                        responseData = responseData.Replace("Scale/Challenge", "Scl/Ch");
-                        responseData = responseData.Replace("Record (W-L-T)", "Record");
-                        responseData = responseData.Replace("Defense", "Def");
-                        responseData = responseData.Replace("Played", "Pl");
-
                         // This API returns a JSonArray instead of JSonObjects -- so we have to deal with it differently than the other APIs.
                         JArray j = (JArray)JsonConvert.DeserializeObject(responseData);
 
                         List<EventRankingInformation> eventRankingInfo = new List<EventRankingInformation>();
                         foreach (var item in j)
                         {
-                            EventRankingInformation e = new EventRankingInformation();
-                            e.rank = item[0].ToString();
-                            e.team = item[1].ToString();
-                            e.ranking_score = item[2].ToString();
-                            e.auto = item[3].ToString();
-                            e.scale_challenge = item[4].ToString();
-                            e.goals = item[5].ToString();
-                            e.defense = item[6].ToString();
-                            e.record_w_l_t = item[7].ToString();
-                            e.played = item[8].ToString();
-                            eventRankingInfo.Add(e);
+                            // check to see if this is the "header" row by checking the team string for the header string - we don't want to add this to the List<>
+                            if (!item[1].ToString().Equals("Team"))
+                            {
+                                EventRankingInformation e = new EventRankingInformation();
+                                e.rank = item[0].ToString();
+                                e.team = item[1].ToString();
+                                e.ranking_score = item[2].ToString();
+                                e.auto = item[3].ToString();
+                                e.scale_challenge = item[4].ToString();
+                                e.goals = item[5].ToString();
+                                e.defense = item[6].ToString();
+                                e.record_w_l_t = item[7].ToString();
+                                e.played = item[8].ToString();
+                                eventRankingInfo.Add(e);
+                            }
                         }
 
                         return new List<EventRankingInformation>(eventRankingInfo);
