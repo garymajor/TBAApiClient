@@ -24,7 +24,7 @@ namespace TbaApiClient
             try
             {
                 CurrentWebError = null;
-                using (var httpClient = new HttpClient())
+                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
@@ -54,7 +54,7 @@ namespace TbaApiClient
             try
             {
                 CurrentWebError = null;
-                using (var httpClient = new HttpClient())
+                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
@@ -84,7 +84,7 @@ namespace TbaApiClient
             try
             {
                 CurrentWebError = null;
-                using (var httpClient = new HttpClient())
+                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
@@ -137,7 +137,7 @@ namespace TbaApiClient
             try
             {
                 CurrentWebError = null;
-                using (var httpClient = new HttpClient())
+                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
@@ -167,7 +167,7 @@ namespace TbaApiClient
             try
             {
                 CurrentWebError = null;
-                using (var httpClient = new HttpClient())
+                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);

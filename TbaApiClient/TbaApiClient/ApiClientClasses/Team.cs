@@ -9,6 +9,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Web.Http;
+using Windows.Web.Http.Filters;
 
 namespace TbaApiClient
 {
@@ -57,7 +58,8 @@ namespace TbaApiClient
             try
             {
                 CurrentWebError = null;
-                using (var httpClient = new HttpClient())
+
+                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
@@ -87,7 +89,7 @@ namespace TbaApiClient
             try
             {
                 CurrentWebError = null;
-                using (var httpClient = new HttpClient())
+                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
