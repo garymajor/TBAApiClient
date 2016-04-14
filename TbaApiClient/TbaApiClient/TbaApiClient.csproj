@@ -107,6 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiClientClasses\ApiClient.cs" />
     <Compile Include="DataModel\EventAwardInformation.cs" />
     <Compile Include="DataModel\EventInformation.cs" />
     <Compile Include="DataModel\MatchInformation.cs" />
