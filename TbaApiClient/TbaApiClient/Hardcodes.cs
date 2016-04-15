@@ -19,6 +19,16 @@ namespace TbaApiClient
         public const string BaseURL = "http://www.thebluealliance.com/api/v2/";
 
         /// <summary>
+        /// The  URL that is used to make calls to TheBlueAlliance District API.
+        /// </summary>
+        public const string BaseDistrictURL = BaseURL + "district/";
+
+        /// <summary>
+        /// The  URL that is used to make calls to TheBlueAlliance Districts API.
+        /// </summary>
+        public const string BaseDistrictsURL = BaseURL + "districts/";
+
+        /// <summary>
         /// The  URL that is used to make calls to TheBlueAlliance Team API.
         /// </summary>
         public const string BaseTeamURL = BaseURL + "team/";

@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using TbaApiClient.DataModel;
 using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -97,6 +99,37 @@ namespace TbaApiClient
             {
                 CurrentWebError = webError;
                 return new TeamInformation();
+            }
+        }
+
+        /// <summary>
+        /// Gets the district for a given team.
+        /// </summary>
+        /// <param name="teamnumber">The team number (e.g., "2147")</param>
+        /// <returns>Task of type String</string></returns>
+        public async Task<string> GetTeamDistrict(string teamnumber)
+        {
+            try
+            {
+                CurrentWebError = null;
+                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
+                {
+                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber + "/history/districts")))
+                    {
+                        string responseData = await response.Content.ReadAsStringAsync();
+
+                        JObject jsonObject = (JObject)JsonConvert.DeserializeObject(responseData);
+                        string s = jsonObject.Value<string>(Hardcodes.YearString);
+                        s = s.Replace(Hardcodes.YearString, "");
+
+                        return (s != null) ? s : string.Empty;
+                    }
+                }
+            }
+            catch (Exception webError)
+            {
+                CurrentWebError = webError;
+                return string.Empty;
             }
         }
     }

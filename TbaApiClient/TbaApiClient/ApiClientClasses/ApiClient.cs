@@ -12,6 +12,17 @@ namespace TbaApiClient
     public class ApiClient
     {
         /// <summary>
+        /// District API Class
+        /// </summary>
+        public District DistrictApi
+        {
+            get
+            {
+                return districtApi;
+            }
+        }
+
+        /// <summary>
         /// Event API Class
         /// </summary>
         public Event EventApi
@@ -40,7 +51,13 @@ namespace TbaApiClient
         {
             eventApi = new Event();
             teamApi = new Team();
+            districtApi = new District();
         }
+
+        /// <summary>
+        /// private District API member
+        /// </summary>
+        private District districtApi { get; set; }
 
         /// <summary>
         /// private Event API member
