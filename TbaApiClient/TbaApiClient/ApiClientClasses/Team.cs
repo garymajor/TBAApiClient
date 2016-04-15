@@ -27,11 +27,8 @@ namespace TbaApiClient
             try
             {
                 CurrentWebError = null;
-                using (var httpClient = new HttpClient())
+                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
-
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber + "/" + Hardcodes.YearString + "/events")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
@@ -61,9 +58,6 @@ namespace TbaApiClient
 
                 using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
-
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber + "/event/" + eventkey + "/matches")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
@@ -91,9 +85,6 @@ namespace TbaApiClient
                 CurrentWebError = null;
                 using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
-
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber)))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();

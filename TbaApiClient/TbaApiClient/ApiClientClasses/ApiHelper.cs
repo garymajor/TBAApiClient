@@ -21,7 +21,14 @@ namespace TbaApiClient
             httpProtocolFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.MostRecent;
             httpProtocolFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.Default;
 
-            return new HttpClient(httpProtocolFilter);
+            // create the client with the caching filters
+            HttpClient httpClient = new HttpClient(httpProtocolFilter);
+
+            // set the request headers
+            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
+            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
+
+            return httpClient;
         }
     }
 }

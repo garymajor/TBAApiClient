@@ -26,9 +26,6 @@ namespace TbaApiClient
                 CurrentWebError = null;
                 using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
-
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/awards")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
@@ -56,9 +53,6 @@ namespace TbaApiClient
                 CurrentWebError = null;
                 using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
-
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/matches")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
@@ -86,9 +80,6 @@ namespace TbaApiClient
                 CurrentWebError = null;
                 using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
-
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/rankings")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
@@ -137,11 +128,9 @@ namespace TbaApiClient
             try
             {
                 CurrentWebError = null;
+
                 using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
-
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/teams")))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
@@ -169,9 +158,6 @@ namespace TbaApiClient
                 CurrentWebError = null;
                 using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
-                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-TBA-App-Id", Hardcodes.AppID);
-
                     using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey)))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
