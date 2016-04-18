@@ -15,7 +15,61 @@ namespace TbaApiClient.DataModel
                 return team_key.Replace(Hardcodes.TeamPrefix, "");
             }
         }
-        
+
+        public EventPoints DistrictEvent1
+        {
+            get
+            {
+                if (event_points.Keys.Count > 0)
+                {
+                    var keys = event_points.Keys;
+                    var key = keys.ElementAt(0);
+
+                    if (event_points[key] != null)
+                    {
+                        return event_points[key];
+                    }
+                }
+                return new EventPoints();
+            }
+        }
+
+        public EventPoints DistrictEvent2
+        {
+            get
+            {
+                if (event_points.Keys.Count > 1)
+                {
+                    var keys = event_points.Keys;
+                    var key = keys.ElementAt(1);
+
+                    if (event_points[key] != null)
+                    {
+                        return event_points[key];
+                    }
+                }
+                return new EventPoints();
+            }
+        }
+
+        public EventPoints DistrictChampionship
+        {
+            get
+            {
+                if (event_points.Keys.Count > 2)
+                {
+                    var keys = event_points.Keys;
+                    var key = keys.ElementAt(2);
+
+                    if (event_points[key] != null)
+                    {
+                        return event_points[key];
+                    }
+                }
+                return new EventPoints();
+            }
+        }
+
         public class EventPoints
         {
             public int alliance_points { get; set; }
