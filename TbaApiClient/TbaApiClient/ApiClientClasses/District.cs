@@ -32,8 +32,7 @@ namespace TbaApiClient
                 using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
                     //using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseDistrictURL + Hardcodes.YearString)))
-                    //TODO: change back to current year - Current year is throwing 500 Server error right now - this is a temporary work around for development progress
-                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseDistrictsURL + "2015")))
+                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseDistrictsURL + Hardcodes.YearString)))
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
                         List<DistrictInformation> districtInfo = JsonConvert.DeserializeObject<List<DistrictInformation>>(responseData);
