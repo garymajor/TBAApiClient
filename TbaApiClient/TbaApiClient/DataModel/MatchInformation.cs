@@ -60,6 +60,17 @@ namespace TbaApiClient.DataModel
         }
 
         /// <summary>
+        /// public member to indicate whether the Blue Alliance won the match
+        /// </summary>
+        public bool BlueAllianceWin
+        {
+            get
+            {
+                return BlueAllianceScore > RedAllianceScore;
+            }
+        }
+        
+        /// <summary>
         /// public member to easily get the red alliance teams for the match.
         /// </summary>
         public string RedAllianceTeams
@@ -78,6 +89,17 @@ namespace TbaApiClient.DataModel
             get
             {
                 return alliances.red.score;
+            }
+        }
+
+        /// <summary>
+        /// public member to indicate whether the Blue Alliance won the match
+        /// </summary>
+        public bool RedAllianceWin
+        {
+            get
+            {
+                return RedAllianceScore > BlueAllianceScore;
             }
         }
 
