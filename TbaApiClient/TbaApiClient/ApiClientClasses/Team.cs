@@ -44,18 +44,16 @@ namespace TbaApiClient
         /// <returns>Task of type ObservableCollection of TeamEventInformation</returns>
         public async Task<List<EventInformation>> GetTeamEventInfoList(string teamnumber)
         {
+            Uri uri = new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber + "/" + Hardcodes.YearString + "/events");
+            string cachekey = "GetTeamEventInfoList" + "-" + Hardcodes.TeamPrefix + teamnumber + "-" + Hardcodes.YearString;
+            CurrentWebError = null;
+
             try
             {
-                CurrentWebError = null;
-                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
-                {
-                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber + "/" + Hardcodes.YearString + "/events")))
-                    {
-                        string responseData = await response.Content.ReadAsStringAsync();
-                        List<EventInformation> teamEventInfo = JsonConvert.DeserializeObject<List<EventInformation>>(responseData);
-                        return teamEventInfo;
-                    }
-                }
+                var responseData = await ApiHelper.GetResponseFromUriOrCache(uri, cache, cachekey);
+
+                List<EventInformation> teamEventInfo = JsonConvert.DeserializeObject<List<EventInformation>>(responseData);
+                return teamEventInfo;
             }
             catch (Exception webError)
             {
@@ -72,19 +70,16 @@ namespace TbaApiClient
         /// <returns>Task of type ObservableCollection of MatchInformation</returns>
         public async Task<List<MatchInformation>> GetTeamEventMatchList(string teamnumber, string eventkey)
         {
+            Uri uri = new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber + "/event/" + eventkey + "/matches");
+            string cachekey = "GetTeamMatchList" + "-" + Hardcodes.TeamPrefix + teamnumber + "-" + eventkey;
+            CurrentWebError = null;
+
             try
             {
-                CurrentWebError = null;
+                var responseData = await ApiHelper.GetResponseFromUriOrCache(uri, cache, cachekey);
 
-                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
-                {
-                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber + "/event/" + eventkey + "/matches")))
-                    {
-                        string responseData = await response.Content.ReadAsStringAsync();
-                        List<MatchInformation> eventMatchInfo = JsonConvert.DeserializeObject<List<MatchInformation>>(responseData);
-                        return eventMatchInfo;
-                    }
-                }
+                List<MatchInformation> eventMatchInfo = JsonConvert.DeserializeObject<List<MatchInformation>>(responseData);
+                return eventMatchInfo;
             }
             catch (Exception webError)
             {
@@ -100,18 +95,16 @@ namespace TbaApiClient
         /// <returns>Task of type TeamInformation</returns>
         public async Task<TeamInformation> GetTeamInfo(string teamnumber)
         {
+            Uri uri = new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber);
+            string cachekey = "GetTeamInfo" + "-" + Hardcodes.TeamPrefix + teamnumber;
+            CurrentWebError = null;
+
             try
             {
-                CurrentWebError = null;
-                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
-                {
-                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber)))
-                    {
-                        string responseData = await response.Content.ReadAsStringAsync();
-                        TeamInformation teamInfo = JsonConvert.DeserializeObject<TeamInformation>(responseData);
-                        return teamInfo;
-                    }
-                }
+                var responseData = await ApiHelper.GetResponseFromUriOrCache(uri, cache, cachekey);
+
+                TeamInformation teamInfo = JsonConvert.DeserializeObject<TeamInformation>(responseData);
+                return teamInfo;
             }
             catch (Exception webError)
             {
@@ -127,22 +120,19 @@ namespace TbaApiClient
         /// <returns>Task of type String</string></returns>
         public async Task<string> GetTeamDistrict(string teamnumber)
         {
+            Uri uri = new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber + "/history/districts");
+            string cachekey = "GetTeamDistrict" + "-" + Hardcodes.TeamPrefix + teamnumber;
+            CurrentWebError = null;
+
             try
             {
-                CurrentWebError = null;
-                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
-                {
-                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseTeamURL + Hardcodes.TeamPrefix + teamnumber + "/history/districts")))
-                    {
-                        string responseData = await response.Content.ReadAsStringAsync();
+                var responseData = await ApiHelper.GetResponseFromUriOrCache(uri, cache, cachekey);
 
-                        JObject jsonObject = (JObject)JsonConvert.DeserializeObject(responseData);
-                        string s = jsonObject.Value<string>(Hardcodes.YearString);
-                        s = s.Replace(Hardcodes.YearString, "");
+                JObject jsonObject = (JObject)JsonConvert.DeserializeObject(responseData);
+                string s = jsonObject.Value<string>(Hardcodes.YearString);
+                s = s.Replace(Hardcodes.YearString, "");
 
-                        return (s != null) ? s : string.Empty;
-                    }
-                }
+                return (s != null) ? s : string.Empty;
             }
             catch (Exception webError)
             {

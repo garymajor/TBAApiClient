@@ -39,18 +39,16 @@ namespace TbaApiClient
         /// <returns>Task of type ObservableCollection of EventAwardInformation</returns>
         public async Task<List<EventAwardInformation>> GetEventAwardList(string eventkey)
         {
+            Uri uri = new Uri(Hardcodes.BaseEventURL + eventkey + "/awards");
+            string cachekey = "GetEventAwardsList" + "-" + eventkey;
+            CurrentWebError = null;
+
             try
             {
-                CurrentWebError = null;
-                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
-                {
-                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/awards")))
-                    {
-                        string responseData = await response.Content.ReadAsStringAsync();
-                        List<EventAwardInformation> eventAwardInfo = JsonConvert.DeserializeObject<List<EventAwardInformation>>(responseData);
-                        return eventAwardInfo;
-                    }
-                }
+                var responseData = await ApiHelper.GetResponseFromUriOrCache(uri, cache, cachekey);
+
+                List<EventAwardInformation> eventAwardInfo = JsonConvert.DeserializeObject<List<EventAwardInformation>>(responseData);
+                return eventAwardInfo;
             }
             catch (Exception webError)
             {
@@ -66,18 +64,16 @@ namespace TbaApiClient
         /// <returns>Task of type ObservableCollection of MatchInformation</returns>
         public async Task<List<MatchInformation>> GetEventMatchList(string eventkey)
         {
+            Uri uri = new Uri(Hardcodes.BaseEventURL + eventkey + "/matches");
+            string cachekey = "GetEventMatchList" + "-" + eventkey;
+            CurrentWebError = null;
+
             try
             {
-                CurrentWebError = null;
-                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
-                {
-                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/matches")))
-                    {
-                        string responseData = await response.Content.ReadAsStringAsync();
-                        List<MatchInformation> eventMatchInfo = JsonConvert.DeserializeObject<List<MatchInformation>>(responseData);
-                        return eventMatchInfo;
-                    }
-                }
+                var responseData = await ApiHelper.GetResponseFromUriOrCache(uri, cache, cachekey);
+
+                List<MatchInformation> eventMatchInfo = JsonConvert.DeserializeObject<List<MatchInformation>>(responseData);
+                return eventMatchInfo;
             }
             catch (Exception webError)
             {
@@ -93,41 +89,38 @@ namespace TbaApiClient
         /// <returns>Task of type ObservableCollection of EventRankingInformation</returns>
         public async Task<List<EventRankingInformation>> GetEventRankingList(string eventkey)
         {
+            Uri uri = new Uri(Hardcodes.BaseEventURL + eventkey + "/rankings");
+            string cachekey = "GetEventRankingList" + "-" + eventkey;
+            CurrentWebError = null;
+
             try
             {
-                CurrentWebError = null;
-                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
+                var responseData = await ApiHelper.GetResponseFromUriOrCache(uri, cache, cachekey);
+
+                // This API returns a JSonArray instead of JSonObjects -- so we have to deal with it differently than the other APIs.
+                JArray j = (JArray)JsonConvert.DeserializeObject(responseData);
+
+                List<EventRankingInformation> eventRankingInfo = new List<EventRankingInformation>();
+                foreach (var item in j)
                 {
-                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/rankings")))
+                    // check to see if this is the "header" row by checking the team string for the header string - we don't want to add this to the List<>
+                    if (!item[1].ToString().Equals("Team"))
                     {
-                        string responseData = await response.Content.ReadAsStringAsync();
-
-                        // This API returns a JSonArray instead of JSonObjects -- so we have to deal with it differently than the other APIs.
-                        JArray j = (JArray)JsonConvert.DeserializeObject(responseData);
-
-                        List<EventRankingInformation> eventRankingInfo = new List<EventRankingInformation>();
-                        foreach (var item in j)
-                        {
-                            // check to see if this is the "header" row by checking the team string for the header string - we don't want to add this to the List<>
-                            if (!item[1].ToString().Equals("Team"))
-                            {
-                                EventRankingInformation e = new EventRankingInformation();
-                                e.rank = item[0].ToString();
-                                e.team = item[1].ToString();
-                                e.ranking_score = item[2].ToString();
-                                e.auto = item[3].ToString();
-                                e.scale_challenge = item[4].ToString();
-                                e.goals = item[5].ToString();
-                                e.defense = item[6].ToString();
-                                e.record_w_l_t = item[7].ToString();
-                                e.played = item[8].ToString();
-                                eventRankingInfo.Add(e);
-                            }
-                        }
-
-                        return new List<EventRankingInformation>(eventRankingInfo);
+                        EventRankingInformation e = new EventRankingInformation();
+                        e.rank = item[0].ToString();
+                        e.team = item[1].ToString();
+                        e.ranking_score = item[2].ToString();
+                        e.auto = item[3].ToString();
+                        e.scale_challenge = item[4].ToString();
+                        e.goals = item[5].ToString();
+                        e.defense = item[6].ToString();
+                        e.record_w_l_t = item[7].ToString();
+                        e.played = item[8].ToString();
+                        eventRankingInfo.Add(e);
                     }
                 }
+
+                return new List<EventRankingInformation>(eventRankingInfo);
             }
             catch (Exception webError)
             {
@@ -143,18 +136,20 @@ namespace TbaApiClient
         /// <returns>Task of type ObservableCollection of TeamInformation</returns>
         public async Task<List<TeamInformation>> GetEventTeamList(string eventkey)
         {
+            Uri uri = new Uri(Hardcodes.BaseEventURL + eventkey + "/teams");
+            string cachekey = "GetEventTeamList" + "-" + eventkey;
+            CurrentWebError = null;
+
             try
             {
                 CurrentWebError = null;
 
                 using (var httpClient = ApiHelper.GetHttpClientWithCaching())
                 {
-                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey + "/teams")))
-                    {
-                        string responseData = await response.Content.ReadAsStringAsync();
-                        List<TeamInformation> eventTeamInfo = JsonConvert.DeserializeObject<List<TeamInformation>>(responseData);
-                        return eventTeamInfo;
-                    }
+                    var responseData = await ApiHelper.GetResponseFromUriOrCache(uri, cache, cachekey);
+
+                    List<TeamInformation> eventTeamInfo = JsonConvert.DeserializeObject<List<TeamInformation>>(responseData);
+                    return eventTeamInfo;
                 }
             }
             catch (Exception webError)
@@ -171,18 +166,16 @@ namespace TbaApiClient
         /// <returns>Task of type EventInformation</returns>
         public async Task<EventInformation> GetEventInfo(string eventkey)
         {
+            Uri uri = new Uri(Hardcodes.BaseEventURL + eventkey);
+            string cachekey = "GetEventInfo" + "-" + eventkey;
+            CurrentWebError = null;
+
             try
             {
-                CurrentWebError = null;
-                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
-                {
-                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseEventURL + eventkey)))
-                    {
-                        string responseData = await response.Content.ReadAsStringAsync();
-                        EventInformation eventInfo = JsonConvert.DeserializeObject<EventInformation>(responseData);
-                        return eventInfo;
-                    }
-                }
+                var responseData = await ApiHelper.GetResponseFromUriOrCache(uri, cache, cachekey);
+
+                EventInformation eventInfo = JsonConvert.DeserializeObject<EventInformation>(responseData);
+                return eventInfo;
             }
             catch (Exception webError)
             {

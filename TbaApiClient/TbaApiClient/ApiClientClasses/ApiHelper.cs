@@ -35,7 +35,7 @@ namespace TbaApiClient
         public static HttpClient GetHttpClientWithCaching(DateTimeOffset cachedate)
         {
             HttpClient httpClient = GetHttpClientWithCaching();
-            if (cachedate != DateTime.MinValue)
+            if (cachedate != DateTimeOffset.MinValue)
             {
                 httpClient.DefaultRequestHeaders.IfModifiedSince = cachedate;
             }
