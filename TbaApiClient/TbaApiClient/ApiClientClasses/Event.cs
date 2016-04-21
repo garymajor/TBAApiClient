@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TbaApiClient.Cache;
 using TbaApiClient.DataModel;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,23 @@ namespace TbaApiClient
     public class Event
     {
         public Exception CurrentWebError;
+        private FileCache cache;
+
+        /// <summary>
+        /// Constructor with caching
+        /// </summary>
+        /// <param name="c">the cache</param>
+        public Event(FileCache c)
+        {
+            cache = c;
+        }
+
+        /// <summary>
+        /// Constructor without caching
+        /// </summary>
+        public Event()
+        {
+        }
 
         /// <summary>
         /// Gets the award list for a given event.

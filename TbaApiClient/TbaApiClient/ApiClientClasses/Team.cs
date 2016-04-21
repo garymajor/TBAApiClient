@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using TbaApiClient.Cache;
 using TbaApiClient.DataModel;
 using System;
 using Newtonsoft.Json;
@@ -18,6 +19,23 @@ namespace TbaApiClient
     public class Team
     {
         public Exception CurrentWebError;
+        private FileCache cache;
+
+        /// <summary>
+        /// Constructor with caching
+        /// </summary>
+        /// <param name="c">the cache</param>
+        public Team(FileCache c)
+        {
+            cache = c;
+        }
+
+        /// <summary>
+        /// Constructor without caching
+        /// </summary>
+        public Team()
+        {
+        }
 
         /// <summary>
         /// Gets the team event information for the given teamnumber.

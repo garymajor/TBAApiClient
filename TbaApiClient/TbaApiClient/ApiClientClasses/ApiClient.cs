@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TbaApiClient.Cache;
+using Windows.Storage;
 
 namespace TbaApiClient
 {
@@ -45,10 +47,23 @@ namespace TbaApiClient
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor with caching
+        /// </summary>
+        /// <param name="location">The location to store the file cache</param>
+        public ApiClient(StorageFolder location)
+        {
+            cache = new FileCache(location);
+            eventApi = new Event(cache);
+            teamApi = new Team(cache);
+            districtApi = new District(cache);
+        }
+
+        /// <summary>
+        /// Constructor with no caching
         /// </summary>
         public ApiClient()
         {
+            cache = null;
             eventApi = new Event();
             teamApi = new Team();
             districtApi = new District();
@@ -68,5 +83,10 @@ namespace TbaApiClient
         /// private Team API member
         /// </summary>
         private Team teamApi { get; set; }
+
+        /// <summary>
+        /// private file cache member
+        /// </summary>
+        private FileCache cache { get; set; }
     }
 }
