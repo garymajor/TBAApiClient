@@ -16,18 +16,19 @@ namespace TbaApiClient.DataModel
             }
         }
 
+        public string DistrictEvent1Key { get; set; }
+        public string DistrictEvent2Key { get; set; }
+        public string DistrictChampionshipKey { get; set; }
+
         public EventPoints DistrictEvent1
         {
             get
             {
-                if (event_points.Keys.Count > 0)
+                if (!string.IsNullOrEmpty(DistrictEvent1Key))
                 {
-                    var keys = event_points.Keys;
-                    var key = keys.ElementAt(0);
-
-                    if (event_points[key] != null)
+                    if (event_points.Keys.Contains(DistrictEvent1Key))
                     {
-                        return event_points[key];
+                        return event_points[DistrictEvent1Key];
                     }
                 }
                 return new EventPoints();
@@ -38,14 +39,11 @@ namespace TbaApiClient.DataModel
         {
             get
             {
-                if (event_points.Keys.Count > 1)
+                if (!string.IsNullOrEmpty(DistrictEvent2Key))
                 {
-                    var keys = event_points.Keys;
-                    var key = keys.ElementAt(1);
-
-                    if (event_points[key] != null)
+                    if (event_points.Keys.Contains(DistrictEvent2Key))
                     {
-                        return event_points[key];
+                        return event_points[DistrictEvent2Key];
                     }
                 }
                 return new EventPoints();
@@ -56,14 +54,11 @@ namespace TbaApiClient.DataModel
         {
             get
             {
-                if (event_points.Keys.Count > 2)
+                if (!string.IsNullOrEmpty(DistrictChampionshipKey))
                 {
-                    var keys = event_points.Keys;
-                    var key = keys.ElementAt(2);
-
-                    if (event_points[key] != null)
+                    if (event_points.Keys.Contains(DistrictChampionshipKey))
                     {
-                        return event_points[key];
+                        return event_points[DistrictChampionshipKey];
                     }
                 }
                 return new EventPoints();

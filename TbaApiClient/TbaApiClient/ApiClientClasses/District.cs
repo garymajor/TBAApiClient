@@ -52,6 +52,33 @@ namespace TbaApiClient
         /// </summary>
         /// <param name="district">The district (e.g., pnw)</param>
         /// <returns>Task of type ObservableCollection of TeamEventInformation</returns>
+        public async Task<List<EventInformation>> GetDistrictEventsList(string district)
+        {
+            try
+            {
+                CurrentWebError = null;
+                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
+                {
+                    using (var response = await httpClient.GetAsync(new Uri(Hardcodes.BaseDistrictURL + district + "/" + Hardcodes.YearString + "/events")))
+                    {
+                        string responseData = await response.Content.ReadAsStringAsync();
+                        List<EventInformation> districtEventInfo = JsonConvert.DeserializeObject<List<EventInformation>>(responseData);
+                        return districtEventInfo;
+                    }
+                }
+            }
+            catch (Exception webError)
+            {
+                CurrentWebError = webError;
+                return new List<EventInformation>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the district ranking information for the given district.
+        /// </summary>
+        /// <param name="district">The district (e.g., pnw)</param>
+        /// <returns>Task of type ObservableCollection of TeamEventInformation</returns>
         public async Task<List<DistrictRankingInformation>> GetDistrictRankingList(string district)
         {
             try
@@ -63,6 +90,41 @@ namespace TbaApiClient
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
                         List<DistrictRankingInformation> districtRankingInfo = JsonConvert.DeserializeObject<List<DistrictRankingInformation>>(responseData);
+
+                        // Get the Event Information so that we can figure out the order of events returned by the ranking list
+                        List<EventInformation> eventInfo = await GetDistrictEventsList(district);
+
+                        // Go through each item and make sure we know which events are Event 1, Event 2, and District Championship
+                        foreach (var rank in districtRankingInfo)
+                        {
+                            //look at each item and update the object with sorted events.
+                            var keys = rank.event_points.Keys;
+                            Dictionary<string, string> eventDateList = new Dictionary<string, string>();
+                            foreach (var key in keys)
+                            {
+                                var startdate = eventInfo.Where(e => e.key.CompareTo(key) == 0).Select(e => e.start_date).First();
+                                eventDateList.Add(key, startdate);
+                            }
+
+                            int i = 0;
+                            foreach (var item in eventDateList.OrderBy(d => d.Value).Select(d => d))
+                            {
+                                if (i == 0) // Store Event 1 key
+                                {
+                                    rank.DistrictEvent1Key = item.Key;
+                                }
+                                else if (i == 1) // Store Event 2 key 
+                                {
+                                    rank.DistrictEvent2Key = item.Key;
+                                }
+                                else if (i == 2) // Store District Championship Event key 
+                                {
+                                    rank.DistrictChampionshipKey = item.Key;
+                                }
+                                i++;
+                            }
+                        }
+
                         return districtRankingInfo;
                     }
                 }
