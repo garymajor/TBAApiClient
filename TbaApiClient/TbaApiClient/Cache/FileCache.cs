@@ -18,6 +18,11 @@ namespace TbaApiClient.Cache
         /// </summary>
         private StorageFolder folder;
 
+        /// <summary>
+        /// The age in days when the cache becomes invalid
+        /// </summary>
+        private double cacheInvalidAge;
+
         private NotifyTaskCompletion<bool> cacheCleaned;
 
         /// <summary>
@@ -28,7 +33,8 @@ namespace TbaApiClient.Cache
         public FileCache(StorageFolder location, double ageoverride = age)
         {
             folder = location;
-            cacheCleaned = new NotifyTaskCompletion<bool>(CleanCache(ageoverride));
+            cacheInvalidAge = ageoverride;
+            cacheCleaned = new NotifyTaskCompletion<bool>(CleanCache());
         }
 
         /// <summary>
@@ -67,12 +73,10 @@ namespace TbaApiClient.Cache
         /// <summary>
         /// Removes all cache entries over 'age' days old.
         /// </summary>
-        /// <param name="age">The age (in days)</param>
-        private async Task<bool> CleanCache(double age)
+        private async Task<bool> CleanCache()
         {
-            DateTimeOffset dto = new DateTimeOffset(DateTime.Now, TimeSpan.FromDays(age));
-            var results = folder.CreateFileQuery(CommonFileQuery.OrderByDate);
-            var files = await results.GetFilesAsync();
+            DateTimeOffset dto = new DateTimeOffset(DateTime.Now.AddDays(-1 * cacheInvalidAge));
+            var files = await folder.GetFilesAsync();
             foreach (var file in files)
             {
                 if (DateTimeOffset.Compare(file.DateCreated, dto) < 0) // file is older than 'age' days ago
