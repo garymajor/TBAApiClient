@@ -2,17 +2,9 @@
 using TbaApiClient.Cache;
 using TbaApiClient.DataModel;
 using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.IO;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Web.Http;
-using Windows.Web.Http.Filters;
 
 namespace TbaApiClient
 {
