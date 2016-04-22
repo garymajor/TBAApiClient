@@ -111,6 +111,7 @@
     <Compile Include="ApiClientClasses\ApiHelper.cs" />
     <Compile Include="ApiClientClasses\District.cs" />
     <Compile Include="Cache\FileCache.cs" />
+    <Compile Include="Cache\NotifyTaskCompletion.cs" />
     <Compile Include="DataModel\DistrictInformation.cs" />
     <Compile Include="DataModel\DistrictRankingInformation.cs" />
     <Compile Include="DataModel\EventAwardInformation.cs" />

@@ -4,27 +4,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Streams;
+using Windows.Storage.Search;
 
 namespace TbaApiClient.Cache
 {
     public class FileCache
     {
         private const string extension = ".txt";
+        private const double age = 14; // default age
 
         /// <summary>
         /// The location of the Cache
         /// </summary>
         private StorageFolder folder;
 
+        private NotifyTaskCompletion<bool> cacheCleaned;
+
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="path">The file location of the cache</param>
-        public FileCache(StorageFolder location)
+        /// <param name="ageoverride">The max age of the cache in days. The default is 14.</param>
+        public FileCache(StorageFolder location, double ageoverride = age)
         {
             folder = location;
-            CleanCache(14);
+            cacheCleaned = new NotifyTaskCompletion<bool>(CleanCache(ageoverride));
         }
 
         /// <summary>
@@ -64,9 +68,20 @@ namespace TbaApiClient.Cache
         /// Removes all cache entries over 'age' days old.
         /// </summary>
         /// <param name="age">The age (in days)</param>
-        private void CleanCache(int age)
+        private async Task<bool> CleanCache(double age)
         {
-            //TODO: Implement CleanCache
+            DateTimeOffset dto = new DateTimeOffset(DateTime.Now, TimeSpan.FromDays(age));
+            var results = folder.CreateFileQuery(CommonFileQuery.OrderByDate);
+            var files = await results.GetFilesAsync();
+            foreach (var file in files)
+            {
+                if (DateTimeOffset.Compare(file.DateCreated, dto) < 0) // file is older than 'age' days ago
+                {
+                    await file.DeleteAsync();
+                }
+             }
+
+            return true;
         }
     }
 }
