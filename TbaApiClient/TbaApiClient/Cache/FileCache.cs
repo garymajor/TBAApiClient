@@ -10,7 +10,7 @@ namespace TbaApiClient.Cache
 {
     public class FileCache
     {
-        private const string extension = ".json";
+        private const string extension = ".txt";
 
         /// <summary>
         /// The location of the Cache
@@ -25,23 +25,6 @@ namespace TbaApiClient.Cache
         {
             folder = location;
             CleanCache(14);
-        }
-
-        /// <summary>
-        /// Gets the creation date of the item in the cache.
-        /// </summary>
-        /// <param name="cachekey">the key</param>
-        /// <returns>Date of the item in the cache (if it does not exist, returns DateTime.MinValue)</returns>
-        public async Task<DateTimeOffset> GetCacheDate(string cachekey)
-        {
-            string filename = cachekey + extension;
-            IStorageItem item = await folder.TryGetItemAsync(filename);
-            if (item !=null)
-            {
-                return item.DateCreated.ToLocalTime();
-            }
-
-            return DateTimeOffset.MinValue;
         }
 
         /// <summary>

@@ -12,18 +12,12 @@ namespace TbaApiClient
     public static class ApiHelper
     {
         /// <summary>
-        /// Setup an HttpClient object with Cache Read/Write set.
+        /// Setup an HttpClient object with the app request headers set.
         /// </summary>
         /// <returns>HttpClient</returns>
-        public static HttpClient GetHttpClientWithCaching()
+        public static HttpClient GetHttpClient()
         {
-            // set caching
-            var httpProtocolFilter = new HttpBaseProtocolFilter();
-            httpProtocolFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.MostRecent;
-            httpProtocolFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.Default;
-
-            // create the client with the caching filters
-            HttpClient httpClient = new HttpClient(httpProtocolFilter);
+            HttpClient httpClient = new HttpClient();
 
             // set the request headers
             httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("accept", "application/json");
@@ -32,9 +26,14 @@ namespace TbaApiClient
             return httpClient;
         }
 
-        public static HttpClient GetHttpClientWithCaching(DateTimeOffset cachedate)
+        /// <summary>
+        /// Setup an HttpClient object with the app request headers set and the If-Modified-Since Header set to the cache date value.
+        /// </summary>
+        /// <param name="cachedate">The Last Updated date to use as the If-Modified-Since date in the request header</param>
+        /// <returns>HttpClient</returns>
+        public static HttpClient GetHttpClient(DateTimeOffset cachedate)
         {
-            HttpClient httpClient = GetHttpClientWithCaching();
+            HttpClient httpClient = GetHttpClient();
             if (cachedate != DateTimeOffset.MinValue)
             {
                 httpClient.DefaultRequestHeaders.IfModifiedSince = cachedate;
@@ -54,12 +53,13 @@ namespace TbaApiClient
         public async static Task<string> GetResponseFromUriOrCache(Uri uri, FileCache cache, string cachekey)
         {
             string responseData;
+            string cachedatekey = cachekey + "-LastUpdated";
 
             try
             {
                 if (cache == null) // no cache - just get the data from the URI
                 {
-                    using (var httpClient = GetHttpClientWithCaching())
+                    using (var httpClient = GetHttpClient())
                     {
                         using (var response = await httpClient.GetAsync(uri))
                         {
@@ -70,9 +70,20 @@ namespace TbaApiClient
                 else // we have a cache object, so we need to pull that unless the URI content is newer
                 {
                     var cachevalue = await cache.TryGetCacheItem(cachekey);
-                    var cachedate = await cache.GetCacheDate(cachekey);
+                    var cachedatevalue = await cache.TryGetCacheItem(cachedatekey);
 
-                    using (var httpClient = GetHttpClientWithCaching(cachedate)) // passing the cachedate sets the "IfModifiedSince" header
+                    // convert the cache date value to a DateTimeOffset
+                    DateTimeOffset cachedate;
+                    if (string.IsNullOrEmpty(cachedatevalue))
+                    {
+                        cachedate = DateTimeOffset.MinValue; // couldn't read the cache date, so invalidating it by setting it to the Min value.
+                    }
+                    else
+                    {
+                        cachedate = new DateTimeOffset(Convert.ToDateTime(cachedatevalue));
+                    }
+
+                    using (var httpClient = GetHttpClient(cachedate)) // passing the cachedate sets the "IfModifiedSince" header
                     {
                         using (var response = await httpClient.GetAsync(uri))
                         {
@@ -84,6 +95,7 @@ namespace TbaApiClient
                             {
                                 responseData = await response.Content.ReadAsStringAsync();
                                 await cache.StoreCache(cachekey, responseData);
+                                await cache.StoreCache(cachedatekey, response.Content.Headers.LastModified.ToString());
                             }
                         }
                     }

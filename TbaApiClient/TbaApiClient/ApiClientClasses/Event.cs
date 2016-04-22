@@ -1,13 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using TbaApiClient.Cache;
-using TbaApiClient.DataModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
-using Windows.Web.Http;
+using TbaApiClient.Cache;
+using TbaApiClient.DataModel;
 
 namespace TbaApiClient
 {
@@ -142,15 +139,10 @@ namespace TbaApiClient
 
             try
             {
-                CurrentWebError = null;
+                var responseData = await ApiHelper.GetResponseFromUriOrCache(uri, cache, cachekey);
 
-                using (var httpClient = ApiHelper.GetHttpClientWithCaching())
-                {
-                    var responseData = await ApiHelper.GetResponseFromUriOrCache(uri, cache, cachekey);
-
-                    List<TeamInformation> eventTeamInfo = JsonConvert.DeserializeObject<List<TeamInformation>>(responseData);
-                    return eventTeamInfo;
-                }
+                List<TeamInformation> eventTeamInfo = JsonConvert.DeserializeObject<List<TeamInformation>>(responseData);
+                return eventTeamInfo;
             }
             catch (Exception webError)
             {
